@@ -5,36 +5,36 @@ import { DiskStore as ExtraDiskStore, DiskStoreView, JSONValueConverter } from '
 describe('DiskStore', () => {
   describe('set', () => {
     test('record does not exist', async () => {
-      const cache = await ExtraDiskStore.create()
+      const cache = new ExtraDiskStore()
       const store = new DiskStore(createView(cache))
       const record: IRecord<string> = {
         type: 'result'
       , value: 'value'
       }
 
-      store.set(0, record)
+      await store.set(0, record)
 
-      expect(store.dump()).toStrictEqual([
+      expect(await store.dump()).toStrictEqual([
         record
       ])
     })
 
     test('record exists', async () => {
-      const cache = await ExtraDiskStore.create()
+      const cache = new ExtraDiskStore()
       const store = new DiskStore(createView(cache))
       const oldRecord: IRecord<string> = {
         type: 'result'
       , value: 'old-value'
       }
-      store.set(0, oldRecord)
+      await store.set(0, oldRecord)
       const newRecord: IRecord<string> = {
         type: 'result'
       , value: 'new-value'
       }
 
-      store.set(0, newRecord)
+      await store.set(0, newRecord)
 
-      expect(store.dump()).toStrictEqual([
+      expect(await store.dump()).toStrictEqual([
         newRecord
       ])
     })
@@ -42,24 +42,24 @@ describe('DiskStore', () => {
 
   describe('get', () => {
     test('record exists', async () => {
-      const cache = await ExtraDiskStore.create()
+      const cache = new ExtraDiskStore()
       const store = new DiskStore(createView(cache))
       const record: IRecord<string> = {
         type: 'result'
       , value: 'value'
       }
-      store.set(0, record)
+      await store.set(0, record)
 
-      const result = store.get(0)
+      const result = await store.get(0)
 
       expect(result).toStrictEqual(record)
     })
 
     test('event does not exist', async () => {
-      const cache = await ExtraDiskStore.create()
+      const cache = new ExtraDiskStore()
       const store = new DiskStore(createView(cache))
 
-      const result = store.get(0)
+      const result = await store.get(0)
 
       expect(result).toBeUndefined()
     })
@@ -67,47 +67,47 @@ describe('DiskStore', () => {
 
   describe('pop', () => {
     test('record exists', async () => {
-      const cache = await ExtraDiskStore.create()
+      const cache = new ExtraDiskStore()
       const store = new DiskStore(createView(cache))
       const record: IRecord<string> = {
         type: 'result'
       , value: 'value'
       }
-      store.set(0, record)
+      await store.set(0, record)
 
-      const result = store.pop()
+      const result = await store.pop()
 
       expect(result).toStrictEqual(record)
-      expect(store.dump()).toStrictEqual([])
+      expect(await store.dump()).toStrictEqual([])
     })
 
     test('record does not exist', async () => {
-      const cache = await ExtraDiskStore.create()
+      const cache = new ExtraDiskStore()
       const store = new DiskStore(createView(cache))
 
-      const result = store.pop()
+      const result = await store.pop()
 
       expect(result).toBeUndefined()
-      expect(store.dump()).toStrictEqual([])
+      expect(await store.dump()).toStrictEqual([])
     })
   })
 
   test('clear', async () => {
-    const cache = await ExtraDiskStore.create()
+    const cache = new ExtraDiskStore()
     const store = new DiskStore(createView(cache))
     const record: IRecord<string> = {
       type: 'result'
     , value: 'value'
     }
-    store.set(0, record)
+    await store.set(0, record)
 
-    store.clear()
+    await store.clear()
 
-    expect(store.dump()).toStrictEqual([])
+    expect(await store.dump()).toStrictEqual([])
   })
 
   test('dump', async () => {
-    const cache = await ExtraDiskStore.create()
+    const cache = new ExtraDiskStore()
     const store = new DiskStore(createView(cache))
     const record1: IRecord<string> = {
       type: 'result'
@@ -117,10 +117,10 @@ describe('DiskStore', () => {
       type: 'result'
     , value: 'value-2'
     }
-    store.set(0, record1)
-    store.set(1, record2)
+    await store.set(0, record1)
+    await store.set(1, record2)
 
-    const result = store.dump()
+    const result = await store.dump()
 
     expect(result).toStrictEqual([
       record1
