@@ -1,1 +1,1 @@
-export * from './disk-store'
+export * from './disk-store.js'
